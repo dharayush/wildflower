@@ -227,6 +227,10 @@
 	style:transform="translateY({progress * 48}px)"
 	style:pointer-events={progress > 0.5 ? 'none' : 'auto'}
 >
+	<a class="btn glass glass-strong fab identify" href={resolve('/identify')}>
+		<Icon name="scan" size={20} />
+		Identify flower
+	</a>
 	<button class="btn btn-primary fab" onclick={openNew}>
 		<Icon name="plus" size={20} strokeWidth={2.2} />
 		New flower
@@ -453,13 +457,24 @@
 		bottom: calc(var(--safe-bottom) + 24px);
 		display: flex;
 		justify-content: center;
+		gap: 10px;
+		padding: 0 var(--gutter);
 		z-index: 10;
 		will-change: transform, opacity;
 	}
 
 	.fab {
 		height: 54px;
-		padding: 0 26px 0 22px;
+		padding: 0 22px 0 18px;
+		white-space: nowrap;
+	}
+
+	.fab.identify {
+		color: var(--color-text);
+		text-decoration: none;
+		box-shadow:
+			inset 0 1px 0 var(--glass-highlight),
+			var(--shadow-md);
 	}
 
 	.actions {

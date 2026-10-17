@@ -1,0 +1,4 @@
+# Keep LF everywhere (Prettier writes LF); stops Windows checkouts from rewriting line endings.
+* text=auto eol=lf
+*.png binary
+*.ico binary

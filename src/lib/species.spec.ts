@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
 	conservationLevel,
+	matchScientificName,
+	nameKeys,
 	formatFlowering,
 	aliasFor,
 	emptyFilters,
@@ -210,5 +212,63 @@ describe('detail formatting', () => {
 		expect(conservationLevel('Extinct in the Wild')).toBe('threatened');
 		expect(conservationLevel('Rare (Indian Red Data Book)')).toBe('concern');
 		expect(conservationLevel('Least Concern')).toBe('none');
+	});
+});
+
+describe('matchScientificName', () => {
+	const list = parseIndex({
+		...file,
+		species: [
+			{ ...file.species[1], i: 30, n: ['Tree Rhododendron'], b: 'Rhododendron arboreum' },
+			{
+				...file.species[1],
+				i: 31,
+				n: ['Nilgiri Rhododendron'],
+				b: 'Rhododendron arboreum subsp. nilagiricum'
+			},
+			{ ...file.species[1], i: 32, n: ['Damask Rose'], b: 'Rosa x damascena' },
+			{
+				...file.species[1],
+				i: 33,
+				n: ['Dark Bulb-Leaf Orchid'],
+				b: 'Bulbophyllum triste',
+				s: ['Bulbophyllum micranthum Hook.f']
+			}
+		]
+	});
+	const id = (name: string) => matchScientificName(list, name)?.species.id;
+
+	it('reads the comparable parts of a name', () => {
+		expect(nameKeys('Rosa × damascena Herrm.')).toEqual({
+			binomial: 'rosa damascena',
+			full: 'rosa damascena'
+		});
+		expect(nameKeys('Rhododendron arboreum ssp. nilagiricum')?.full).toBe(
+			'rhododendron arboreum subsp nilagiricum'
+		);
+		expect(nameKeys('Rosa')).toBeUndefined();
+	});
+
+	it('matches exact names, hybrids, and ranks', () => {
+		expect(matchScientificName(list, 'Rhododendron arboreum')).toMatchObject({
+			via: 'name',
+			exact: true
+		});
+		expect(id('Rhododendron arboreum')).toBe(30);
+		expect(id('Rhododendron arboreum subsp. nilagiricum')).toBe(31);
+		expect(id('Rosa × damascena')).toBe(32);
+	});
+
+	it('falls back to the species for an unknown subspecies, and to synonyms', () => {
+		expect(matchScientificName(list, 'Rhododendron arboreum var. roseum')).toMatchObject({
+			exact: false
+		});
+		expect(id('Rhododendron arboreum var. roseum')).toBe(30);
+		expect(matchScientificName(list, 'Bulbophyllum micranthum')).toMatchObject({ via: 'synonym' });
+		expect(id('Bulbophyllum micranthum')).toBe(33);
+	});
+
+	it('finds nothing for other plants', () => {
+		expect(matchScientificName(list, 'Quercus robur')).toBeUndefined();
 	});
 });

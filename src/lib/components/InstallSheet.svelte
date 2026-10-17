@@ -64,7 +64,7 @@
 		<img src={asset('pwa-192x192.png')} alt="" width="56" height="56" />
 		<div>
 			<p class="name">Wildflower</p>
-			<p class="perks">Works offline · No account · Private to this device</p>
+			<p class="perks">Works offline · No account · Your journal stays on this device</p>
 		</div>
 	</div>
 

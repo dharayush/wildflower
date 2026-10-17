@@ -8,4 +8,4 @@
  * Independent of SvelteKit's `version` from `$app/env`, which is a per-build
  * timestamp the service worker uses to key its cache.
  */
-export const APP_VERSION = 'v2.04.000';
+export const APP_VERSION = 'v3.00.000';

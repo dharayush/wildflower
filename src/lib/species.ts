@@ -222,6 +222,105 @@ export function aliasFor(species: Species, query: string): string | undefined {
 	});
 }
 
+// ── Matching scientific names (e.g. from Pl@ntNet) ─────────────
+
+const RANKS: Record<string, string> = {
+	subsp: 'subsp',
+	ssp: 'subsp',
+	var: 'var',
+	f: 'f',
+	forma: 'f'
+};
+
+/**
+ * Comparable forms of a scientific name: the binomial ("rosa damascena") and, when it names
+ * a subspecies or variety, the full name ("rhododendron arboreum subsp nilagiricum").
+ * Ignores case, accents, hybrid marks, quotes, and anything after (authors, cultivars).
+ */
+export function nameKeys(name: string): { binomial: string; full: string } | undefined {
+	const words = normalize(name)
+		.replace(/[×'"‘’“”()]/g, ' ')
+		.split(/\s+/)
+		.filter((word) => word && word !== 'x');
+	if (words.length < 2) return undefined;
+	const binomial = `${words[0]} ${words[1]}`;
+	const rank = RANKS[words[2]?.replace(/\.$/, '') ?? ''];
+	return { binomial, full: rank && words[3] ? `${binomial} ${rank} ${words[3]}` : binomial };
+}
+
+interface NameIndex {
+	botanicalFull: Map<string, Species[]>;
+	botanicalBinomial: Map<string, Species[]>;
+	synonymFull: Map<string, Species[]>;
+	synonymBinomial: Map<string, Species[]>;
+}
+
+const nameIndexes = new WeakMap<readonly Species[], NameIndex>();
+
+function nameIndex(list: readonly Species[]): NameIndex {
+	let index = nameIndexes.get(list);
+	if (index) return index;
+	index = {
+		botanicalFull: new Map(),
+		botanicalBinomial: new Map(),
+		synonymFull: new Map(),
+		synonymBinomial: new Map()
+	};
+	const add = (map: Map<string, Species[]>, key: string, species: Species) => {
+		const entries = map.get(key);
+		if (!entries) map.set(key, [species]);
+		else if (!entries.includes(species)) entries.push(species);
+	};
+	for (const species of list) {
+		const own = nameKeys(species.botanical);
+		if (own) {
+			add(index.botanicalFull, own.full, species);
+			add(index.botanicalBinomial, own.binomial, species);
+		}
+		for (const synonym of species.synonyms) {
+			const keys = nameKeys(synonym);
+			if (!keys) continue;
+			add(index.synonymFull, keys.full, species);
+			add(index.synonymBinomial, keys.binomial, species);
+		}
+	}
+	nameIndexes.set(list, index);
+	return index;
+}
+
+export interface NameMatch {
+	species: Species;
+	/** How it matched: its own botanical name, or one of its synonyms. */
+	via: 'name' | 'synonym';
+	/** False when only the species matched a subspecies/variety name (or vice versa). */
+	exact: boolean;
+}
+
+/**
+ * The database species a scientific name refers to: its exact botanical name first, then a
+ * synonym, then the same species at another rank (preferring the plain species entry).
+ */
+export function matchScientificName(
+	list: readonly Species[],
+	scientificName: string
+): NameMatch | undefined {
+	const keys = nameKeys(scientificName);
+	if (!keys) return undefined;
+	const index = nameIndex(list);
+	const speciesLevel = (entries: Species[]) =>
+		entries.find((s) => nameKeys(s.botanical)?.full === keys.binomial) ?? entries[0];
+
+	const byName = index.botanicalFull.get(keys.full);
+	if (byName) return { species: byName[0], via: 'name', exact: true };
+	const bySynonym = index.synonymFull.get(keys.full);
+	if (bySynonym) return { species: bySynonym[0], via: 'synonym', exact: true };
+	const sameSpecies = index.botanicalBinomial.get(keys.binomial);
+	if (sameSpecies) return { species: speciesLevel(sameSpecies), via: 'name', exact: false };
+	const synonymSpecies = index.synonymBinomial.get(keys.binomial);
+	if (synonymSpecies) return { species: synonymSpecies[0], via: 'synonym', exact: false };
+	return undefined;
+}
+
 // ── Arrange ─────────────────────────────────────────────────────
 
 export type SpeciesOrder = 'name-asc' | 'name-desc' | 'botanical-asc' | 'botanical-desc';

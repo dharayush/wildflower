@@ -10,10 +10,10 @@ export function fitWithin(width: number, height: number, max: number) {
 }
 
 /** Downscale and re-encode camera photos so IndexedDB doesn't fill up with 10 MB originals. */
-async function compress(file: File): Promise<Blob> {
+async function compress(file: File, maxEdge = MAX_EDGE, quality = QUALITY): Promise<Blob> {
 	try {
 		const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
-		const { width, height } = fitWithin(bitmap.width, bitmap.height, MAX_EDGE);
+		const { width, height } = fitWithin(bitmap.width, bitmap.height, maxEdge);
 		const canvas = new OffscreenCanvas(width, height);
 		const ctx = canvas.getContext('2d')!;
 		// JPEG has no alpha; without a fill, transparent pixels turn black.
@@ -21,15 +21,20 @@ async function compress(file: File): Promise<Blob> {
 		ctx.fillRect(0, 0, width, height);
 		ctx.drawImage(bitmap, 0, 0, width, height);
 		bitmap.close();
-		return await canvas.convertToBlob({ type: 'image/jpeg', quality: QUALITY });
+		return await canvas.convertToBlob({ type: 'image/jpeg', quality });
 	} catch {
 		// Unsupported format or API (e.g. HEIC on some browsers): store the original.
 		return file;
 	}
 }
 
+/** A photo sized for Pl@ntNet, which works on (and resizes to) 1280 px, at its recommended JPEG quality. */
+export function forIdentification(file: File): Promise<Blob> {
+	return compress(file, 1280, 0.9);
+}
+
 export async function addPhotos(flowerId: number, files: Iterable<File>): Promise<void> {
-	const blobs = await Promise.all([...files].map(compress));
+	const blobs = await Promise.all([...files].map((file) => compress(file)));
 	const now = Date.now();
 	await db.photos.bulkAdd(blobs.map((blob, i) => ({ flowerId, blob, createdAt: now + i })));
 	await db.flowers.update(flowerId, { updatedAt: now });

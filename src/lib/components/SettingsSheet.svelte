@@ -2,11 +2,17 @@
 	import Sheet from './Sheet.svelte';
 	import SegmentedControl from './SegmentedControl.svelte';
 	import Icon from './Icon.svelte';
+	import PlantNetKeyForm from './PlantNetKeyForm.svelte';
 	import { pwa } from '#lib/pwa.svelte.ts';
+	import { plantnet } from '#lib/plantnet.svelte.ts';
 	import { theme, type ThemePreference } from '#lib/theme.svelte.ts';
 	import { APP_VERSION } from '#lib/version.ts';
 
 	let { open = $bindable(false) }: { open?: boolean } = $props();
+
+	$effect(() => {
+		if (open) plantnet.refreshQuota();
+	});
 
 	const options: { value: ThemePreference; label: string; icon: 'sun' | 'moon' | 'system' }[] = [
 		{ value: 'light', label: 'Light', icon: 'sun' },
@@ -24,6 +30,26 @@
 			value={theme.preference}
 			onchange={(value, event) => theme.set(value, { x: event.clientX, y: event.clientY })}
 		/>
+	</section>
+
+	<section>
+		<h3 class="eyebrow">Flower identification</h3>
+		{#if plantnet.key}
+			<div class="row">
+				<span class="row-icon"><Icon name="scan" size={20} /></span>
+				<span class="row-text">
+					<span>Pl@ntNet connected</span>
+					<span class="row-detail">
+						{plantnet.remaining !== undefined && plantnet.total
+							? `${plantnet.remaining} of ${plantnet.total} identifications left today`
+							: 'Your key is saved on this device'}
+					</span>
+				</span>
+				<button class="remove" onclick={() => plantnet.disconnect()}>Remove</button>
+			</div>
+		{:else}
+			<PlantNetKeyForm />
+		{/if}
 	</section>
 
 	{#if pwa.updateReady}
@@ -91,6 +117,14 @@
 		font-size: 13px;
 		font-weight: 400;
 		color: var(--color-text-muted);
+	}
+
+	.remove {
+		flex-shrink: 0;
+		padding: 8px 4px 8px 10px;
+		font-size: 14px;
+		font-weight: 550;
+		color: var(--color-danger);
 	}
 
 	h3 {

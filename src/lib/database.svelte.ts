@@ -8,8 +8,10 @@ import {
 	parseDetail,
 	parseIndex,
 	prepareSearch,
+	matchScientificName,
 	searchSpecies,
 	sortSpecies,
+	type NameMatch,
 	type DetailEntry,
 	type IndexFile,
 	type Species,
@@ -92,6 +94,12 @@ export async function getSpeciesDetail(id: number): Promise<SpeciesDetail | unde
 	const { file } = await loadIndex();
 	const entry = (await loadShard(Math.floor(id / file.shardSize)))[id];
 	return entry && parseDetail(entry, file.imageHost);
+}
+
+/** The database species each scientific name refers to (e.g. Pl@ntNet's suggestions). */
+export async function matchNames(names: string[]): Promise<(NameMatch | undefined)[]> {
+	const { species } = await loadIndex();
+	return names.map((name) => matchScientificName(species, name));
 }
 
 let byName: Species[] | undefined;
