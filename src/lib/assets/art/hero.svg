@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+	<!-- Placeholder hero art: a glass flower. Replace with final illustration (any format) and update the import in src/lib/art.ts. -->
+	<defs>
+		<linearGradient id="petal" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#ff9fbd" stop-opacity="0.95" />
+			<stop offset="1" stop-color="#e2557f" stop-opacity="0.75" />
+		</linearGradient>
+		<linearGradient id="petal-back" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#ffc6d6" stop-opacity="0.7" />
+			<stop offset="1" stop-color="#f07aa0" stop-opacity="0.45" />
+		</linearGradient>
+		<linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#fff" stop-opacity="0.75" />
+			<stop offset="0.45" stop-color="#fff" stop-opacity="0" />
+		</linearGradient>
+		<radialGradient id="core" cx="0.4" cy="0.35" r="0.7">
+			<stop offset="0" stop-color="#fff3c4" />
+			<stop offset="0.6" stop-color="#f6c444" />
+			<stop offset="1" stop-color="#e09a1c" />
+		</radialGradient>
+		<linearGradient id="stem" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#5fb57c" />
+			<stop offset="1" stop-color="#2f7d55" />
+		</linearGradient>
+		<linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#8fd6a4" stop-opacity="0.95" />
+			<stop offset="1" stop-color="#3f9a63" stop-opacity="0.8" />
+		</linearGradient>
+	</defs>
+
+	<path d="M200 230 C 196 290 190 330 178 372" stroke="url(#stem)" stroke-width="10" fill="none" stroke-linecap="round" />
+	<path d="M190 312 C 150 310 118 286 108 254 C 152 250 184 276 190 312 Z" fill="url(#leaf)" />
+	<path d="M194 284 C 228 270 262 276 286 298 C 250 318 214 312 194 284 Z" fill="url(#leaf)" opacity="0.8" />
+
+	<g transform="translate(200 170)">
+		<g fill="url(#petal-back)">
+			<ellipse rx="46" ry="92" cy="-70" transform="rotate(36)" />
+			<ellipse rx="46" ry="92" cy="-70" transform="rotate(108)" />
+			<ellipse rx="46" ry="92" cy="-70" transform="rotate(180)" />
+			<ellipse rx="46" ry="92" cy="-70" transform="rotate(252)" />
+			<ellipse rx="46" ry="92" cy="-70" transform="rotate(324)" />
+		</g>
+		<g fill="url(#petal)" stroke="#fff" stroke-opacity="0.55" stroke-width="1.5">
+			<ellipse rx="40" ry="84" cy="-64" />
+			<ellipse rx="40" ry="84" cy="-64" transform="rotate(72)" />
+			<ellipse rx="40" ry="84" cy="-64" transform="rotate(144)" />
+			<ellipse rx="40" ry="84" cy="-64" transform="rotate(216)" />
+			<ellipse rx="40" ry="84" cy="-64" transform="rotate(288)" />
+		</g>
+		<g fill="url(#sheen)">
+			<ellipse rx="40" ry="84" cy="-64" />
+			<ellipse rx="40" ry="84" cy="-64" transform="rotate(288)" />
+		</g>
+		<circle r="34" fill="url(#core)" />
+		<circle r="34" fill="url(#sheen)" />
+	</g>
+</svg>

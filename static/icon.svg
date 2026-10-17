@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+	<!-- Background matches the app's light background color (app.css) so icons blend into the launch splash. -->
+	<rect width="512" height="512" rx="96" fill="#f3f1ec" />
+	<!-- Nudged below center: the top petal reaches further than the lower two. Stays inside the maskable safe zone (r = 204.8). -->
+	<g transform="translate(256 272) scale(1.2)">
+		<g fill="#e46b8a">
+			<ellipse rx="44" ry="78" cy="-62" />
+			<ellipse rx="44" ry="78" cy="-62" transform="rotate(72)" />
+			<ellipse rx="44" ry="78" cy="-62" transform="rotate(144)" />
+			<ellipse rx="44" ry="78" cy="-62" transform="rotate(216)" />
+			<ellipse rx="44" ry="78" cy="-62" transform="rotate(288)" />
+		</g>
+		<circle r="38" fill="#f5c84c" />
+	</g>
+</svg>

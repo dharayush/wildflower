@@ -1,0 +1,325 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
+
+/* ── Design tokens ─────────────────────────────────────────────── */
+
+:root {
+	--font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+
+	--radius-sm: 12px;
+	--radius-md: 18px;
+	--radius-lg: 28px;
+	--radius-full: 999px;
+
+	--ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+	--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+	--duration: 320ms;
+
+	--safe-top: env(safe-area-inset-top);
+	--safe-bottom: env(safe-area-inset-bottom);
+	--gutter: 20px;
+
+	color-scheme: light;
+	--color-bg: #f3f1ec;
+	--color-text: #16181a;
+	--color-text-muted: #6a6f73;
+	--color-text-faint: #9a9fa3;
+	--color-primary: #2f7d55;
+	--color-primary-text: #ffffff;
+	--color-accent: #e2557f;
+	--color-danger: #d93f3f;
+	--color-separator: rgb(22 24 26 / 0.08);
+
+	/* Ambient blobs behind the glass. */
+	--blob-1: #ffc4d4;
+	--blob-2: #bfe5cc;
+	--blob-3: #ffe2a8;
+	--blob-opacity: 0.75;
+
+	/* Liquid glass */
+	--glass-bg: rgb(255 255 255 / 0.55);
+	--glass-bg-strong: rgb(255 255 255 / 0.78);
+	--glass-border: rgb(255 255 255 / 0.75);
+	--glass-edge: rgb(22 24 26 / 0.06);
+	--glass-highlight: rgb(255 255 255 / 0.9);
+	--glass-blur: blur(24px) saturate(180%);
+	--shadow-sm: 0 1px 2px rgb(22 24 26 / 0.05), 0 4px 12px rgb(22 24 26 / 0.05);
+	--shadow-md: 0 2px 6px rgb(22 24 26 / 0.05), 0 12px 32px rgb(22 24 26 / 0.09);
+	--shadow-lg: 0 8px 20px rgb(22 24 26 / 0.08), 0 30px 60px rgb(22 24 26 / 0.14);
+	--scrim: rgb(22 24 26 / 0.25);
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+	--color-bg: #0c0e0d;
+	--color-text: #f2f3f1;
+	--color-text-muted: #9ba19d;
+	--color-text-faint: #6b716d;
+	--color-primary: #5cc48b;
+	--color-primary-text: #06150d;
+	--color-accent: #ff7fa3;
+	--color-danger: #ff6b6b;
+	--color-separator: rgb(255 255 255 / 0.08);
+
+	--blob-1: #7a2f4a;
+	--blob-2: #1f5a3c;
+	--blob-3: #6b4f16;
+	--blob-opacity: 0.55;
+
+	--glass-bg: rgb(30 33 32 / 0.55);
+	--glass-bg-strong: rgb(36 40 38 / 0.82);
+	--glass-border: rgb(255 255 255 / 0.1);
+	--glass-edge: rgb(0 0 0 / 0.4);
+	--glass-highlight: rgb(255 255 255 / 0.14);
+	--shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.2);
+	--shadow-md: 0 2px 6px rgb(0 0 0 / 0.3), 0 12px 32px rgb(0 0 0 / 0.35);
+	--shadow-lg: 0 8px 20px rgb(0 0 0 / 0.35), 0 30px 60px rgb(0 0 0 / 0.5);
+	--scrim: rgb(0 0 0 / 0.5);
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-family: var(--font-sans);
+	font-feature-settings: 'cv11', 'ss01', 'ss03';
+	color: var(--color-text);
+	background: var(--color-bg);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-tap-highlight-color: transparent;
+	text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	min-height: 100dvh;
+	overscroll-behavior-y: none;
+	font-size: 16px;
+	line-height: 1.45;
+	letter-spacing: -0.011em;
+}
+
+button,
+input,
+textarea {
+	font: inherit;
+	color: inherit;
+	letter-spacing: inherit;
+}
+
+button {
+	cursor: pointer;
+	border: none;
+	background: none;
+	padding: 0;
+	touch-action: manipulation;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+::selection {
+	background: color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+/* ── Typography ────────────────────────────────────────────────── */
+
+.display {
+	font-family: var(--font-display);
+	font-weight: 400;
+	letter-spacing: -0.01em;
+	line-height: 1;
+}
+
+.eyebrow {
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+}
+
+/* ── Liquid glass ──────────────────────────────────────────────── */
+
+.glass {
+	position: relative;
+	background: var(--glass-bg);
+	-webkit-backdrop-filter: var(--glass-blur);
+	backdrop-filter: var(--glass-blur);
+	border: 1px solid var(--glass-border);
+	box-shadow:
+		inset 0 1px 0 var(--glass-highlight),
+		inset 0 -1px 0 var(--glass-edge),
+		var(--shadow-md);
+}
+
+/* Specular sheen across the top edge. */
+.glass::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	pointer-events: none;
+	background: linear-gradient(180deg, var(--glass-highlight) 0%, transparent 38%, transparent 100%);
+	opacity: 0.35;
+}
+
+.glass-strong {
+	background: var(--glass-bg-strong);
+}
+
+/* ── Buttons ───────────────────────────────────────────────────── */
+
+.btn {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	height: 50px;
+	padding: 0 22px;
+	border-radius: var(--radius-full);
+	font-size: 16px;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+	user-select: none;
+	transition:
+		transform 220ms var(--ease-spring),
+		background-color 200ms ease,
+		color 200ms ease,
+		opacity 200ms ease;
+}
+
+.btn:active:not(:disabled),
+.icon-btn:active:not(:disabled),
+.pressable:active {
+	transform: scale(0.96);
+}
+
+.btn:disabled {
+	opacity: 0.45;
+	cursor: default;
+}
+
+.btn-primary {
+	background: var(--color-primary);
+	color: var(--color-primary-text);
+	box-shadow:
+		inset 0 1px 0 rgb(255 255 255 / 0.25),
+		0 6px 20px color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+.btn-danger {
+	color: var(--color-danger);
+}
+
+.btn-block {
+	width: 100%;
+}
+
+.icon-btn {
+	display: inline-grid;
+	place-items: center;
+	width: 42px;
+	height: 42px;
+	border-radius: var(--radius-full);
+	transition: transform 220ms var(--ease-spring);
+}
+
+.pressable {
+	transition: transform 220ms var(--ease-spring);
+}
+
+/* ── Forms ─────────────────────────────────────────────────────── */
+
+.field {
+	display: grid;
+	gap: 6px;
+}
+
+.field-label {
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--color-text-muted);
+	padding-left: 4px;
+}
+
+.input {
+	width: 100%;
+	height: 50px;
+	padding: 0 16px;
+	border-radius: var(--radius-md);
+	border: 1px solid var(--color-separator);
+	background: color-mix(in srgb, var(--color-bg) 60%, transparent);
+	font-size: 16px;
+	transition:
+		border-color 200ms ease,
+		box-shadow 200ms ease;
+}
+
+.input:focus {
+	outline: none;
+	border-color: color-mix(in srgb, var(--color-primary) 60%, transparent);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+.input::placeholder {
+	color: var(--color-text-faint);
+}
+
+/* ── View transitions ──────────────────────────────────────────── */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: var(--duration);
+	animation-timing-function: var(--ease-out);
+}
+
+::view-transition-group(*) {
+	animation-duration: 420ms;
+	animation-timing-function: var(--ease-out);
+}
+
+/* Morphing photos (square thumbnail ↔ 4:5 hero) crop instead of stretching. */
+::view-transition-old(*),
+::view-transition-new(*) {
+	height: 100%;
+	object-fit: cover;
+	overflow: clip;
+}
+
+/* Theme switch: new theme is revealed by a clip-path animation from theme.svelte.ts. */
+[data-theme-transition]::view-transition-old(root),
+[data-theme-transition]::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after,
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation-duration: 1ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 1ms !important;
+	}
+}

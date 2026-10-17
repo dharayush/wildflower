@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200">
+	<!-- Placeholder empty-state art for the Journal. Replace freely; update src/lib/art.ts if the filename changes. -->
+	<defs>
+		<linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#ffffff" stop-opacity="0.9" />
+			<stop offset="1" stop-color="#ffffff" stop-opacity="0.5" />
+		</linearGradient>
+		<linearGradient id="petal" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#ff9fbd" />
+			<stop offset="1" stop-color="#e2557f" />
+		</linearGradient>
+	</defs>
+	<g transform="rotate(-8 120 110)">
+		<rect x="58" y="40" width="96" height="128" rx="14" fill="url(#page)" stroke="#9aa59e" stroke-opacity="0.35" />
+	</g>
+	<rect x="86" y="34" width="96" height="128" rx="14" fill="url(#page)" stroke="#9aa59e" stroke-opacity="0.4" />
+	<path d="M102 116h64M102 130h48M102 144h56" stroke="#9aa59e" stroke-opacity="0.45" stroke-width="4" stroke-linecap="round" />
+	<g transform="translate(134 78)" fill="url(#petal)" fill-opacity="0.85">
+		<ellipse rx="9" ry="17" cy="-13" />
+		<ellipse rx="9" ry="17" cy="-13" transform="rotate(72)" />
+		<ellipse rx="9" ry="17" cy="-13" transform="rotate(144)" />
+		<ellipse rx="9" ry="17" cy="-13" transform="rotate(216)" />
+		<ellipse rx="9" ry="17" cy="-13" transform="rotate(288)" />
+	</g>
+	<circle cx="134" cy="78" r="7" fill="#f6c444" />
+</svg>
