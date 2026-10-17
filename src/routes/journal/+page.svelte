@@ -227,7 +227,7 @@
 	style:transform="translateY({progress * 48}px)"
 	style:pointer-events={progress > 0.5 ? 'none' : 'auto'}
 >
-	<a class="btn glass glass-strong fab identify" href={resolve('/identify')}>
+	<a class="btn btn-primary fab identify" href={resolve('/identify')}>
 		<Icon name="scan" size={20} />
 		Identify flower
 	</a>
@@ -470,11 +470,7 @@
 	}
 
 	.fab.identify {
-		color: var(--color-text);
 		text-decoration: none;
-		box-shadow:
-			inset 0 1px 0 var(--glass-highlight),
-			var(--shadow-md);
 	}
 
 	.actions {
